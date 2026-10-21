@@ -1,0 +1,6 @@
+backend/.env
+frontend/.env.local
+**/*.db
+test_data/
+backend/test_data/
+**/__pycache__/
