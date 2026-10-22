@@ -6,7 +6,7 @@ from typing import Any
 
 import httpx
 
-from app.core.config import get_settings
+from app.core.config import get_settings, supabase_project_url
 
 
 class SupabaseStore:
@@ -19,7 +19,7 @@ class SupabaseStore:
                 "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to enable persistence."
             )
         self._client = httpx.Client(
-            base_url=f"{settings.SUPABASE_URL.rstrip('/')}/rest/v1/",
+            base_url=f"{supabase_project_url(settings.SUPABASE_URL)}/rest/v1/",
             headers={
                 "apikey": settings.SUPABASE_SERVICE_ROLE_KEY,
                 "Authorization": f"Bearer {settings.SUPABASE_SERVICE_ROLE_KEY}",

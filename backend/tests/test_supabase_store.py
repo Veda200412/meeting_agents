@@ -17,7 +17,7 @@ def test_data_api_uses_server_key_and_returns_rows():
     with patch(
         "app.db.supabase_store.get_settings",
         return_value=SimpleNamespace(
-            SUPABASE_URL="https://project.example",
+            SUPABASE_URL="https://project.example/rest/v1/",
             SUPABASE_SERVICE_ROLE_KEY="server-only-test-key",
         ),
     ), patch("app.db.supabase_store.httpx.Client", return_value=client) as make_client:

@@ -222,7 +222,7 @@ Add these Environment Variables in Vercel for **Production**, **Preview**, and *
 
 The user’s requested three Supabase values are needed, and `GOOGLE_API_KEY` is additionally required because the selected deployment uses genuine Gemini-powered agents. Save it as a Vercel secret/environment variable; it is not a browser variable. On Vercel, agent workflows run within the API request rather than an unreliable background thread. `vercel.json` allows up to 300 seconds; function duration limits depend on the Vercel plan.
 
-Set `SUPABASE_URL` to the project URL from Supabase (for example, `https://<project-ref>.supabase.co`), not the Data API endpoint ending in `/rest/v1`. The frontend also removes a trailing `/rest/v1` suffix if one is accidentally included, so Supabase Auth still receives the project base URL.
+Set `SUPABASE_URL` to the project URL from Supabase (for example, `https://<project-ref>.supabase.co`), not the Data API endpoint ending in `/rest/v1`. The frontend and backend normalize an accidental trailing `/rest/v1` suffix so Supabase Auth and Data API requests use the correct endpoint paths.
 
 Before deploying, create the Supabase project and apply both SQL migrations in order as described above. Configure Supabase Auth’s allowed redirect URLs with the Vercel production domain and any Preview domains you intend to use. After the Vercel build, register and sign in through the app to verify Auth, API routing, Gemini, and RLS-protected reads.
 

@@ -5,6 +5,14 @@ from pydantic import Field
 import os
 
 
+def supabase_project_url(url: str) -> str:
+    """Normalize a Supabase project URL, accepting an accidental REST suffix."""
+    normalized = url.strip().rstrip("/")
+    if normalized.lower().endswith("/rest/v1"):
+        normalized = normalized[:-len("/rest/v1")]
+    return normalized
+
+
 class Settings(BaseSettings):
     """Application settings loaded from environment variables or .env file."""
 

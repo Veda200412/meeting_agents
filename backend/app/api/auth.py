@@ -6,7 +6,7 @@ import httpx
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.core.config import get_settings
+from app.core.config import get_settings, supabase_project_url
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -24,7 +24,7 @@ def get_current_user(
 
     try:
         response = httpx.get(
-            f"{settings.SUPABASE_URL.rstrip('/')}/auth/v1/user",
+            f"{supabase_project_url(settings.SUPABASE_URL)}/auth/v1/user",
             headers={
                 "apikey": settings.SUPABASE_ANON_KEY,
                 "Authorization": f"Bearer {credentials.credentials}",
