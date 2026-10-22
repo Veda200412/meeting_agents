@@ -206,7 +206,7 @@ Set backend values in `backend/.env` and frontend values in `frontend/.env.local
 
 ### Deploying the full app to Vercel
 
-The repository includes [`vercel.json`](./vercel.json), which builds the React app from `frontend`, serves the FastAPI app through the Python function in [`api/index.py`](./api/index.py), and routes `/api/*` requests to that function. Import the repository into Vercel and keep the project root set to the repository root. Vercel uses the checked-in install/build commands and `frontend/dist` output setting.
+The repository includes [`vercel.json`](./vercel.json), which builds the React app from `frontend`, serves the FastAPI app through the Python function in [`api/index.py`](./api/index.py), and routes `/api/*` requests to that function. Import the repository into Vercel and keep the project root set to the repository root. The configured install command installs frontend packages; Vercel installs the Python function dependencies from the root `requirements.txt`. The build command and output directory are also configured in `vercel.json`.
 
 Add these Environment Variables in Vercel for **Production**, **Preview**, and **Development** as applicable:
 
