@@ -18,7 +18,7 @@ def test_data_api_uses_server_key_and_returns_rows():
         "app.db.supabase_store.get_settings",
         return_value=SimpleNamespace(
             SUPABASE_URL="https://project.example/rest/v1/",
-            SUPABASE_SERVICE_ROLE_KEY="server-only-test-key",
+            SUPABASE_SERVICE_ROLE_KEY="legacy-service-role-jwt",
         ),
     ), patch("app.db.supabase_store.httpx.Client", return_value=client) as make_client:
         store = SupabaseStore()
@@ -26,13 +26,31 @@ def test_data_api_uses_server_key_and_returns_rows():
 
     assert rows == [{"id": "run-1"}]
     assert make_client.call_args.kwargs["base_url"] == "https://project.example/rest/v1/"
-    assert make_client.call_args.kwargs["headers"]["apikey"] == "server-only-test-key"
+    assert make_client.call_args.kwargs["headers"]["apikey"] == "legacy-service-role-jwt"
     assert make_client.call_args.kwargs["headers"]["Authorization"] == (
-        "Bearer server-only-test-key"
+        "Bearer legacy-service-role-jwt"
     )
     client.get.assert_called_once_with(
         "runs", params=[("select", "*"), ("owner_id", "eq.user-1")]
     )
+
+
+def test_data_api_does_not_use_new_secret_key_as_bearer_jwt():
+    client = Mock()
+    service_key = "sb_secret_test-value"
+
+    with patch(
+        "app.db.supabase_store.get_settings",
+        return_value=SimpleNamespace(
+            SUPABASE_URL="https://project.example",
+            SUPABASE_SERVICE_ROLE_KEY=service_key,
+        ),
+    ), patch("app.db.supabase_store.httpx.Client", return_value=client) as make_client:
+        SupabaseStore()
+
+    headers = make_client.call_args.kwargs["headers"]
+    assert headers["apikey"] == service_key
+    assert "Authorization" not in headers
 
 
 def test_data_api_surfaces_permission_errors():

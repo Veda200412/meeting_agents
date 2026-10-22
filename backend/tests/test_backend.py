@@ -391,6 +391,9 @@ class TestAPI:
         data = resp.json()
         assert "id" in data
         assert data["status"] == "CREATED"
+        with TestSession() as db:
+            run = repo.get_run(db, data["id"])
+            assert run.owner_id == TEST_USER_ID
 
     def test_create_run_validation(self):
         resp = client.post("/api/runs", json={

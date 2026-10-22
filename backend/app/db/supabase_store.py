@@ -18,13 +18,17 @@ class SupabaseStore:
             raise RuntimeError(
                 "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to enable persistence."
             )
+        service_key = settings.SUPABASE_SERVICE_ROLE_KEY
+        headers = {
+            "apikey": service_key,
+            "Content-Type": "application/json",
+        }
+        if not service_key.startswith("sb_secret_"):
+            headers["Authorization"] = f"Bearer {service_key}"
+
         self._client = httpx.Client(
             base_url=f"{supabase_project_url(settings.SUPABASE_URL)}/rest/v1/",
-            headers={
-                "apikey": settings.SUPABASE_SERVICE_ROLE_KEY,
-                "Authorization": f"Bearer {settings.SUPABASE_SERVICE_ROLE_KEY}",
-                "Content-Type": "application/json",
-            },
+            headers=headers,
             timeout=30,
         )
 
